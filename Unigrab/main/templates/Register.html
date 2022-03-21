@@ -1,0 +1,35 @@
+<html>
+<title>UniGrab_Register</title>
+{% load static %}
+<link rel="shortcut icon" href="icon.ico">
+<body>
+    <h2>Register</h2>
+    <a href="/">Back to home</a>
+
+    <p style="color:red">{{ status|safe }}</p>
+    <!-- Create a Form -->
+    <form method="POST">
+        <!-- Security token by Django -->
+        {% csrf_token %}
+        <!-- form -->
+        <!--check if userID repeat-->
+        <div id="div_id_userID" class="control-group"> <label for="id_userID" class="control-label requiredField">User ID<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="userID" maxlength="64" class="textinput textInput" required="" id="id_userID"> </div> </div> 
+
+        <div id="div_id_email" class="control-group"> <label for="id_email" class="control-label requiredField">
+        Email<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="email" maxlength="64" class="textinput textInput" required="" id="id_email"> </div> </div> 
+        
+        <div id="div_id_phoneNumber" class="control-group"> <label for="id_phoneNumber" class="control-label requiredField">Phone Number<span class="asteriskField">*</span> </label> <div class="controls"> <input type="tel" name="phoneNumber" required="" id="id_phoneNumber"> </div> </div> 
+        
+        <div id="div_id_dob" class="control-group"> <label for="id_dob" class="control-label requiredField">
+        Date of birth (yyyy-mm-dd)<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="dob" class="dateinput" required="" id="id_dob"> </div> </div> 
+
+        <div id="div_id_address" class="control-group"> <label for="id_address" class="control-label requiredField">
+        Delivery Address<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="address" class="dateinput" required="" id="id_address"> </div> </div> 
+
+        <div id="div_id_password" class="control-group"> <label for="id_password" class="control-label requiredField">Create Password<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="password" required="" id="id_password"> </div> </div> 
+
+        <br>
+        <button type="submit" value="Register">Register</button>
+    </form>
+</body>
+</html>

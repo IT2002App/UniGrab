@@ -1,0 +1,29 @@
+<html>
+<title>UniGrab_order</title>
+{% load static %}
+<link rel="shortcut icon" href="icon.ico">
+<body>
+    <h2>Place New Order</h2>
+    <a href="/">Back to home</a>
+
+    <p style="color:red">{{ status|safe }}</p>
+    <!-- Create a Form -->
+    <form method="POST">
+        <!-- Security token by Django -->
+        {% csrf_token %}
+        <!-- form -->
+        <div id="div_id_order" class="control-group"> <label for="id_order" class="control-label requiredField">Order Content<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="orderContent" maxlength="6400" class="textinput textInput" required="" id="id_order"> </div> </div> 
+
+        <div id="div_id_address" class="control-group"> <label for="id_address" class="control-label requiredField">
+        Shop Address<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="shopAddress" maxlength="6400" class="textinput textInput" required="" id="id_address"> </div> </div> 
+
+        <div id="div_id_address" class="control-group"> <label for="id_address" class="control-label requiredField">
+        Delivery Fee<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="fee" maxlength="6400" class="textinput textInput" required="" id="id_address"> </div> </div> 
+
+        
+
+        <br>
+        <button type="submit" value="Add">Confirm</button>
+    </form>
+</body>
+</html>

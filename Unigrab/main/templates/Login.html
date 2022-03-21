@@ -1,0 +1,28 @@
+<html>
+<title>UniGrab_LogIn</title>
+{% load static %}
+<link rel="shortcut icon" href="{% static 'icon.ico'%}"/>
+<body>
+    <h2>Log In</h2>
+
+
+
+    <!-- Create a Form -->
+    <form method="POST">
+        <!-- Security token by Django -->
+        {% csrf_token %}
+        <!-- form -->
+        <div id="div_id_userID" class="control-group"> <label for="id_userID" class="control-label requiredField">
+        userID<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="userID" maxlength="64" class="textinput textInput" required="" id="id_userID"> </div> </div> 
+        
+        <div id="div_id_password" class="control-group"> <label for="id_password" class="control-label requiredField">Password<span class="asteriskField">*</span> </label> <div class="controls"> <input type="text" name="password" required="" id="id_password"> </div> </div> 
+        <br>
+        <p style="color:red">{{ status|safe }}</p>
+        <br>
+        <a href="/">Back to home</a><p>Don't have an account? Create one <a href="Register">here!</a></p>
+        <br>
+        <button type="submit" value="Add">Log In</button>
+    </form>
+    
+</body>
+</html>

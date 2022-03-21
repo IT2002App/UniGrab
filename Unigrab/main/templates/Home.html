@@ -1,0 +1,92 @@
+<html>
+<title>UniGrab</title>
+{% load static %}
+<link rel="shortcut icon" href="{% static 'icon.ico'%}"/>
+<head>
+
+    <meta charset="utf-8">
+    <style>
+        .icon{
+            position: relative;
+            left: 45%;
+             }
+        .bar{
+            width: 100%;
+            height: 50px;
+            background-color: lightgray;
+
+             }
+        .shortcut{
+            width: 100%;
+            height: 40px;
+            background-color: darkgray;
+        }
+
+        .shortcut li{
+            list-style: none;
+            padding: 10px;
+            margin: 0;
+            display: block;
+            float: left;
+        }
+        .shortcut li a{
+            text-decoration: none;
+            border-width: 2;
+            font-size: 25px;
+            color: whitesmoke;
+
+        }
+        .shortcut li a:hover{
+            background-color: royalblue;
+        }
+    </style>
+</head>
+<body>
+    
+    <img class=icon width=10% src="{% static 'icon.png'%}"/>
+
+    <div class='bar'>
+        <ul class="shortcut">
+            <li><a href="Register">Register</a></li>
+            <li><a href="Login">Login</a></li>
+            <li><a href="placeOrder">Place Order</a></li>
+            <li><a href="claimedOrder">Claimed Order</a></li>
+            <li><a href="myOrder">My Order</a></li>
+            <li><a href="Profile">Profile</a></li>
+
+        </ul>
+    </div>
+
+   <br/><br/>
+
+    <table border=1>
+        <thead>
+            <th>Order ID</th>
+            <th>User ID</th>
+            <th>Phone Number</th>
+            <th>Order Content</th>
+            <th>Shop Address</th>
+            <th>Delivery Address</th>
+            <th>Delivery Fee</th>
+            <th>Action</th>
+        </thead>
+        {% for cust in records %}
+        <tr>
+            <td> {{ cust.0 }} </td>
+            <td> {{ cust.1 }} </td>
+            <td> {{ cust.2 }} </td>
+            <td> {{ cust.3 }} </td>
+            <td> {{ cust.4 }} </td>
+            <td> {{ cust.5 }} </td>
+            <td> {{ cust.6 }} </td>
+            <td>
+                <form method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{cust.0}}"/>
+                <button type="submit" name="action" value="claim">Claim Order</button> 
+              </form></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
