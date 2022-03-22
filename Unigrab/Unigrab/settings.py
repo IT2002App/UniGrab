@@ -10,11 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
-from pathlib import Path
-import dj_database_url
+from decouple import config
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+s+0ghe$=m-joq5+7$^zyt!o*p3j5_xcx8rpan&-$(a6gpjw7%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', 'unigrab.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '*.herokuapp.com']
 
 
 # Application definition
@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main.apps.MainConfig',
-    'whitenoise.runserver_nostatic',
+    'app',
 
     
 ]
@@ -52,10 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'Unigrab.urls'
 
@@ -81,18 +78,32 @@ WSGI_APPLICATION = 'Unigrab.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dcbjm8grnaob22',
-        'USER': 'cekpvqpolysilh',
-        'PASSWORD': '668b5e81f737c9161df909eb3d2c0e97c0bfd87ae97cc13c05869fd2203c0da8',
-        'HOST': 'ec2-54-144-237-73.compute-1.amazonaws.com',
-        'PORT': '5432',
+if RUN_LOCAL_DB:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': config('LOCAL_DB_NAME', default='test'),
+            'USER': config('LOCAL_DB_USER', default=''),
+            'HOST': 'localhost',
+            'PORT': 5432
+        }
     }
-}
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+    # If no password is used, the value must not appear in the configuration
+    # Only add the password if one is actually set
+    LOCAL_DB_PASSWORD = config('LOCAL_DB_PASSWORD', default='')
+    if LOCAL_DB_PASSWORD:
+        DATABASES['default']['PASSWORD'] = LOCAL_DB_PASSWORD
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': config('DB_NAME', default=None),
+            'USER': config('DB_USER', default=None),
+            'PASSWORD': config('DB_PASSWORD', default=None),
+            'HOST': config('DB_HOST', default=None),
+            'PORT': 5432
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -130,8 +141,10 @@ USE_TZ = True
 
 
 
-STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
 
+django_heroku.settings(locals())
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
