@@ -1,8 +1,7 @@
-Django~=4.0.3
-pip~=21.3.1
-wheel~=0.36.2
-cryptography~=3.3.1
-lxml~=4.6.2
-tornado~=6.1
-setuptools~=49.2.1
-pywin32~=220
+Django==4.0.3
+pip==21.3.1
+wheel==0.36.2
+cryptography==3.3.1
+lxml==4.6.2
+tornado==6.1
+setuptools==49.2.1
