@@ -24,7 +24,7 @@ def Register(request):
                 email = cursor.fetchone()
                 if email == None:
                     cursor.execute("INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)"
-                        , [request.POST['userID'], request.POST['email'], request.POST['phoneNumber'], 
+                        , [request.POST['userID'], request.POST['email'], request.POST['phoneNumber'],
                         request.POST['dob'], request.POST['address'], request.POST['password']])
                     return redirect('Login')
                 else:
@@ -66,7 +66,7 @@ def Login(request):
 
 def Home(request):
     """Shows the app page"""
-    userID=request.COOKIES.get('userID')
+    userID=request.COOKIES.get('user_id')
     ## Delete customer
     if request.POST:
         if request.POST['action'] == 'claim':
