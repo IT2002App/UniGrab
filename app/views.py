@@ -75,7 +75,7 @@ def Home(request):
             with connection.cursor() as cursor:
                 cursor.execute("SELECT * FROM orders WHERE orderID = %s", [request.POST['id']])
                 order=cursor.fetchone()
-                cursor.execute("INSERT INTO paired VALUES (%s, %s, %s)", [order[0],order[1],userID])
+                cursor.execute("INSERT INTO claim VALUES (%s, %s, %s)", [order[0],order[1],userID])
 
         
     ## Use raw query to get all objects
@@ -98,16 +98,16 @@ def claimedOrder(request):
     if request.POST:
         if request.POST['action'] == 'cancel':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM paired WHERE orderID = %s", [request.POST['orderID']])
+                cursor.execute("DELETE FROM claim WHERE orderID = %s", [request.POST['orderID']])
                 return redirect('claimedOrder')
         if request.POST['action'] == 'delivered':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM paired WHERE orderID = %s", [request.POST['orderID']])
+                cursor.execute("DELETE FROM claim WHERE orderID = %s", [request.POST['orderID']])
                 cursor.execute("DELETE FROM order WHERE orderID = %s", [request.POST['orderID']])
                 return redirect('claimedOrder')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM orders as o,paired as p WHERE o.orderID = p.orderID AND p.deliverymanID=%s ORDER BY o.orderID",[userID])
+        cursor.execute("SELECT * FROM orders as o,claim as p WHERE o.orderID = p.orderID AND p.deliverymanID=%s ORDER BY o.orderID",[userID])
         claimedOrder = cursor.fetchall()
 
     result_dict = {'records': claimedOrder}
@@ -125,7 +125,7 @@ def myOrder(request):
     if request.POST:
         if request.POST['action'] == 'cancel':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM paired WHERE orderID = %s", [request.POST['orderID']])
+                cursor.execute("DELETE FROM claim WHERE orderID = %s", [request.POST['orderID']])
                 cursor.execute("DELETE FROM order WHERE orderID = %s", [request.POST['orderID']])
                 return redirect('myOrder')
     ## Use raw query to get all objects

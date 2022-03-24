@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="db" uuid="c323ca88-c7f3-4cae-8281-a6e4adb9dc6a">
-      <driver-ref>sqlite.xerial</driver-ref>
+    <data-source source="LOCAL" name="uniGrab" uuid="4fc39c43-f1e9-4e08-863f-425a1e584d70">
+      <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\12271\PycharmProjects\UniGrab\Unigrab\db.sqlite3</jdbc-url>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ec2-54-144-237-73.compute-1.amazonaws.com:5432/dcbjm8grnaob22</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
