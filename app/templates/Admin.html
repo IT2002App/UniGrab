@@ -1,0 +1,89 @@
+<html>
+<title>UniGrab</title>
+{% load static %}
+<link rel="shortcut icon" href="{% static 'icon.ico'%}"/>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    
+<img class=icon width=10% src="{% static 'icon.png'%}"/>
+<br/><br/>
+<form method="POST" style="display: inline;">
+{% csrf_token %}
+<button type="submit" name="act" value="Home">Home</button> 
+<button type="submit" name="act" value="orders">Manage Order</button> 
+<button type="submit" name="act" value="users">Manage User</button> 
+</form>
+
+<br/><br/>
+{%if status == 1%}
+    <table border=1>
+        <thead>
+            <th>Order ID</th>
+            <th>User ID</th>
+            <th>Phone Number</th>
+            <th>Order Content</th>
+            <th>Shop Address</th>
+            <th>Delivery Address</th>
+            <th>Delivery Fee</th>
+            <th>Status</th>
+            <th>Action</th>
+        </thead>
+        {% for ord in orders %}
+        <tr>
+            <td> {{ ord.0 }} </td>
+            <td> {{ ord.1 }} </td>
+            <td> {{ ord.2 }} </td>
+            <td> {{ ord.3 }} </td>
+            <td> {{ ord.4 }} </td>
+            <td> {{ ord.5 }} </td>
+            <td> {{ ord.6 }} </td>
+            <td> {{ ord.7 }} </td>
+            <td>
+                <form method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="orderId" value="{{ord.0}}"/>
+                <button type="submit" name="action" value="Delete">Delete</button> 
+              </form></td>
+        </tr>
+
+
+        {% endfor %}
+    </table>
+{%else%}
+    <table border=1>
+        <thead>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Date of Birth</th>
+            <th>Delivery Address</th>
+            <th>Password</th>
+            <th>Action</th>
+        </thead>
+        {% for use in users %}
+        <tr>
+            <td> {{ use.0 }} </td>
+            <td> {{ use.1 }} </td>
+            <td> {{ use.2 }} </td>
+            <td> {{ use.3 }} </td>
+            <td> {{ use.4 }} </td>
+            <td> {{ use.5 }} </td>
+            <td> {{ use.6 }} </td>
+            <td>
+                <form method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="userId" value="{{use.0}}"/>
+                <button type="submit" name="action" value="Delete">Delete</button> 
+              </form></td>
+        </tr>
+
+
+        {% endfor %}
+    </table>
+
+{%endif%}
+</body>
+</html>
