@@ -283,4 +283,4 @@ def Admin(request):
         Users = cursor.fetchall()
     result_dict = {'orders': Orders,'users': Users}
 
-    return render(request,'Home.html',result_dict)
+    return render(request,'Admin.html',result_dict)
