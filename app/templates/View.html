@@ -3,45 +3,63 @@
 {% load static %}
 <link rel="shortcut icon" href="icon.ico">
 <body>
-    <h2>Details for {{cust.0}} {{cust.1}}</h2>
+    <h2>Details for {{cust.0}}</h2>
     <a href="/">Back to home</a>
     <br/><br/>
     <table style='text-align:left'>
         <tr>
-            <th>ID</th>
-            <td>:</td>
-            <td> {{ cust.5 }} </td>
-        </tr>
-        <tr>
-            <th>First name</th>
+            <th>Order ID</th>
             <td>:</td>
             <td> {{ cust.0 }} </td>
         </tr>
         <tr>
-            <th>Last name</th>
+            <th>User ID</th>
             <td>:</td>
             <td> {{ cust.1 }} </td>
         </tr>
         <tr>
-            <th>Email</th>
+            <th>Phone Number</th>
             <td>:</td>
             <td> {{ cust.2 }} </td>
         </tr>
         <tr>
-            <th>Date of birth</th>
+            <th>Order Content</th>
             <td>:</td>
             <td> {{ cust.3 }} </td>
         </tr>
         <tr>
-            <th>Since</th>
+            <th>Shop Address</th>
             <td>:</td>
             <td> {{ cust.4 }} </td>
         </tr>
         <tr>
-            <th>Country</th>
+            <th>Delivery Address</th>
+            <td>:</td>
+            <td> {{ cust.5 }} </td>
+        </tr>
+        <tr>
+            <th>Delivery Fee</th>
             <td>:</td>
             <td> {{ cust.6 }} </td>
         </tr>
+       <!-- {%if status == 'claimed' or status == 'completed'%}
+        <tr>
+            <th>DeliveryMan Name</th>
+            <td>:</td>
+            <td> {{ cust.5 }} </td>
+        </tr>
+        <tr>
+            <th>DeliveryMan Phone Number</th>
+            <td>:</td>
+            <td> {{ cust.6 }} </td>
+        </tr>
+        {%endif%}-->
+        <tr>
+            <th>Order Status</th>
+            <td>:</td>
+            <td> {{ cust.7 }} </td>
+        </tr>
     </table>
+    <a href="editOrder/{{cust.0}}"><button>Edit Order</button></a>
 </body>
 </html>
