@@ -8,7 +8,7 @@ def tryy(request):
 
 
 def Register(request):
-    """Shows the app page"""
+    """Shows the main page"""
     context = {}
     status = ''
 
@@ -16,21 +16,21 @@ def Register(request):
         ## Check if customerid is already in the table
         with connection.cursor() as cursor:
 
-            cursor.execute("SELECT * FROM users WHERE userID = %s", [request.POST['userID']])
-            userID = cursor.fetchone()
+            cursor.execute("SELECT * FROM Users WHERE user_name = %s", [request.POST['userName']])
+            userName = cursor.fetchone()
             ## No customer with same id
-            if userID == None:
-                cursor.execute("SELECT * FROM users WHERE email = %s", [request.POST['email']])
+            if userName == None:
+                cursor.execute("SELECT * FROM Users WHERE email = %s", [request.POST['email']])
                 email = cursor.fetchone()
                 if email == None:
-                    cursor.execute("INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)"
-                        , [request.POST['userID'], request.POST['email'], request.POST['phoneNumber'],
-                        request.POST['dob'], request.POST['address'], request.POST['password']])
+                    cursor.execute("INSERT INTO Users(user_name,email,phone_number,address,birthday,passwords) VALUES (%s, %s, %s, %s, %s, %s)"
+                        , [request.POST['userName'], request.POST['email'], request.POST['phoneNumber'], 
+                         request.POST['address'],request.POST['dob'], request.POST['password']])
                     return redirect('Login')
                 else:
                     status = 'User with email %s already exists' % (request.POST['email'])
             else:
-                status = 'User with ID %s already exists' % (request.POST['userID'])
+                status = 'User with name %s already exists' % (request.POST['userName'])
 
 
     context['status'] = status
@@ -43,14 +43,16 @@ def Login(request):
     status = ''
 
     if request.POST:
+        if request.POST['userName'] == 'admin':
+            return redirect('Admin')
         ## Check if customerid is already in the table
         with connection.cursor() as cursor:
 
-            cursor.execute("SELECT * FROM users WHERE userID = %s AND passwords = %s", [request.POST['userID'],request.POST['password']])
+            cursor.execute("SELECT * FROM users WHERE user_name = %s AND passwords = %s", [request.POST['userName'],request.POST['password']])
             user = cursor.fetchone()
             ## No customer with same id
             if user == None:
-                status = 'Wrong userID or password' 
+                status = 'Wrong userName or password' 
             else: 
                 resp=redirect('Home')
                 resp.set_cookie('userID',user[0],3600)
@@ -65,22 +67,24 @@ def Login(request):
 
 
 def Home(request):
-    """Shows the app page"""
-    userID=request.COOKIES.get('user_id')
+    """Shows the main page"""
+    userID=request.COOKIES.get('userID')
     ## Delete customer
     if request.POST:
         if request.POST['action'] == 'claim':
             if userID==None:
                 return redirect('Login')
+            
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM orders WHERE orderID = %s", [request.POST['id']])
+                cursor.execute("SELECT * FROM Orders WHERE order_id = %s", [request.POST['id']])
                 order=cursor.fetchone()
-                cursor.execute("INSERT INTO claim VALUES (%s, %s, %s)", [order[0],order[1],userID])
-
-        
+                if order[1]!=userID:
+                    cursor.execute("INSERT INTO claim VALUES (%s, %s, %s)", [order[0],order[1],userID])
+                    cursor.execute("UPDATE Orders SET status = 'Claimed' WHERE order_id = %s", [request.POST['id']])#!!!!!!!!!!!!!!!!!!!!!!!!!
+                    return redirect('Home')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM orders ORDER BY userID")
+        cursor.execute("SELECT * FROM Orders WHERE status = 'Waiting' ORDER BY user_id")
         awaitingOrders = cursor.fetchall()
 
     result_dict = {'records': awaitingOrders}
@@ -89,7 +93,7 @@ def Home(request):
 
 
 def claimedOrder(request):
-    """Shows the app page"""
+    """Shows the main page"""
 
     ## Delete customer
     userID=request.COOKIES.get('userID')
@@ -98,16 +102,17 @@ def claimedOrder(request):
     if request.POST:
         if request.POST['action'] == 'cancel':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM claim WHERE orderID = %s", [request.POST['orderID']])
+                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderID']])
+                cursor.execute("UPDATE Orders SET status = 'Waiting' WHERE order_id = %s", [request.POST['orderID']])#!!!!!!!!!!!!!!!alter
                 return redirect('claimedOrder')
         if request.POST['action'] == 'delivered':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM claim WHERE orderID = %s", [request.POST['orderID']])
-                cursor.execute("DELETE FROM order WHERE orderID = %s", [request.POST['orderID']])
+                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderID']])
+                cursor.execute("UPDATE Orders SET status = 'Completed' WHERE order_id = %s", [request.POST['orderID']])#！！！！！！！！！！！！！！！！alter
                 return redirect('claimedOrder')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM orders as o,claim as p WHERE o.orderID = p.orderID AND p.deliverymanID=%s ORDER BY o.orderID",[userID])
+        cursor.execute("SELECT * FROM Orders as o,claim as c WHERE o.order_id = c.order_id AND c.deliveryman_id=%s ORDER BY o.order_id",[userID])
         claimedOrder = cursor.fetchall()
 
     result_dict = {'records': claimedOrder}
@@ -117,7 +122,7 @@ def claimedOrder(request):
 
 
 def myOrder(request):
-    """Shows the app page"""
+    """Shows the main page"""
     userID=request.COOKIES.get('userID')
     if userID == None:
         return redirect('Login')
@@ -125,12 +130,12 @@ def myOrder(request):
     if request.POST:
         if request.POST['action'] == 'cancel':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM claim WHERE orderID = %s", [request.POST['orderID']])
-                cursor.execute("DELETE FROM order WHERE orderID = %s", [request.POST['orderID']])
+                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderID']])
+                cursor.execute("DELETE FROM Orders WHERE order_id = %s", [request.POST['orderID']])
                 return redirect('myOrder')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM orders WHERE userID = %s ORDER BY orderID",[userID])
+        cursor.execute("SELECT * FROM orders WHERE user_id = %s ORDER BY order_id",[userID])
         myOrder = cursor.fetchall()
 
     result_dict = {'records': myOrder}
@@ -142,13 +147,13 @@ def myOrder(request):
 
 # Create your views here.
 def View(request, id):
-    """Shows the app page"""
+    """Shows the main page"""
     userID=request.COOKIES.get('userID')
     if userID == None:
         return redirect('Login')
     ## Use raw query to get a customer
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM user WHERE userID = %s", [userID])
+        cursor.execute("SELECT * FROM Orders WHERE order_id = %s", [id])
         customer = cursor.fetchone()
     result_dict = {'cust': customer}
 
@@ -156,13 +161,13 @@ def View(request, id):
 
 
 def Profile(request):
-    """Shows the app page"""
+    """Shows the main page"""
     userID=request.COOKIES.get('userID')
     if userID == None:
         return redirect('Login')
     ## Use raw query to get a customer
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM users WHERE userID = %s", [userID])
+        cursor.execute("SELECT * FROM users WHERE user_id = %s", [userID])
         customer = cursor.fetchone()
     result_dict = {'cust': customer}
 
@@ -182,15 +187,18 @@ def placeOrder(request):
     if userID == None:
         return redirect('Login')
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM users WHERE userID = %s", [userID])
+        cursor.execute("SELECT * FROM users WHERE user_id = %s", [userID])
         user=cursor.fetchone()
     if request.POST:
         ## Check if customerid is already in the table
         with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO orders (userID,phoneNumber,orderContent,shopAddress,userAdress,fee) VALUES (%s, %s, %s, %s, %s, %s)"
-                    , [userID, user[2], request.POST['orderContent'], request.POST['shopAddress'], user[4], request.POST['fee']])
+                cursor.execute("INSERT INTO Orders (user_id,phone_number,order_content,shop_address,user_address,fee,status) VALUES (%s,%s, %s, %s, %s, %s, %s)"
+                    , [userID, user[2], request.POST['orderContent'], request.POST['shopAddress'], user[4], request.POST['fee'],'Waiting'])
         return redirect('myOrder')
     return render(request, "placeOrder.html", context)
+
+
+
 
 # Create your views here.
 def editUser(request, id):
@@ -200,46 +208,79 @@ def editUser(request, id):
     if userID == None:
         return redirect('Login')
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM users WHERE userID = %s", [userID])
+        cursor.execute("SELECT * FROM Users WHERE user_id = %s", [userID])
         user=cursor.fetchone()
 
     if request.POST:
         ## Check if customerid is already in the table
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM customers WHERE customerid = %s", [request.POST['userID']])
+            cursor.execute("SELECT * FROM Users WHERE user_name = %s", [request.POST['userName']])
             result = cursor.fetchone()
             ## No customer with same id
-            if result == None or result == user[0]:
-                cursor.execute("SELECT * FROM customers WHERE email = %s", [request.POST['email']])
+            if result == None or result == user[1]:
+                cursor.execute("SELECT * FROM Users WHERE email = %s", [request.POST['email']])
                 email = cursor.fetchone()
-                if email == None or result == user[1]:
-                    cursor.execute("INSERT INTO customers VALUES (%s, %s, %s, %s, %s, %s)"#!!!!!!!!!!!!!change to alter later, remember to allow cascade
-                        , [request.POST['userID'], request.POST['email'], request.POST['phoneNumber'], 
-                        request.POST['dob'], request.POST['address'], request.POST['country'] ])
+                if email == None or result == user[2]:
+                    cursor.execute("UPDATE Users SET user_name = %s WHERE user_id = %s", [request.POST['userName'],userID])
+                    cursor.execute("UPDATE Users SET email = %s WHERE user_id = %s", [request.POST['email'],userID])
+                    cursor.execute("UPDATE Users SET phone_number = %s WHERE user_id = %s", [request.POST['phoneNumber'],userID])
+                    cursor.execute("UPDATE Users SET birthday = %s WHERE user_id = %s", [request.POST['dob'],userID])
+                    cursor.execute("UPDATE Users SET address = %s WHERE user_id = %s", [request.POST['address'],userID])
+                    cursor.execute("UPDATE Users SET passwords = %s WHERE user_id = %s", [request.POST['password'],userID])
                     return redirect('Login')
                 else:
                     status = 'User with email %s already exists' % (request.POST['email'])
             else:
-                status = 'User with ID %s already exists' % (request.POST['userID'])
+                status = 'User with name %s already exists' % (request.POST['userName'])
     context['status'] = status
+    context['user'] = user
     return render(request, "editUser.html", context)
 
-def editOrder(request,orderID ):
+def editOrder(request,id ):
     context = {}
+    status = ''
     userID=request.COOKIES.get('userID')
     if userID == None:
         return redirect('Login')
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM users WHERE userID = %s", [userID])
-        user=cursor.fetchone()
-
+        cursor.execute("SELECT * FROM Orders WHERE order_id = %s", [id])
+        order=cursor.fetchone()
     if request.POST:
-        ## Check if customerid is already in the table
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM orders WHERE orderID = %s", [orderID])
-            result = cursor.fetchone()
-            ## No customer with same id
-            cursor.execute("INSERT INTO orders VALUES (%s, %s, %s, %s, %s, %s)"#!!!!!!!!!!!!!change to alter later, remember to allow cascade
-                , [request.POST['content'], request.POST['shopAddress'], request.POST['fee']])
-            return redirect('Profile')
-    return render(request, "editOrder.html")
+            cursor.execute("UPDATE Orders SET order_content = %s WHERE order_id = %s", [request.POST['orderContent'],[id]])
+            cursor.execute("UPDATE Orders SET shop_address = %s WHERE order_id = %s", [request.POST['shopAddress'],[id]])
+            cursor.execute("UPDATE Orders SET fee = %s WHERE order_id = %s", [request.POST['fee'],[id]])
+        return redirect('myOrder')
+    context['order'] = order
+    return render(request, "editOrder.html", context)
+
+
+def Admin(request):
+    status=0
+    if request.POST:
+        if request.POST['act'] == 'Home':
+            return redirect('Home')
+        if request.POST['act'] == 'orders':
+                status=0
+        if request.POST['act'] == 'users':
+            status=1
+        if request.POST['action'] == 'delete':
+            if status==0:
+                with connection.cursor() as cursor:
+                    cursor.execute("DELETE FROM claim WHERE order_id = %s",[request.POST['orderID']])
+                    cursor.execute("DELETE FROM orders WHERE order_id = %s",[request.POST['orderID']])
+                    return redirect('Admin')
+            else:
+                with connection.cursor() as cursor:
+                    cursor.execute("DELETE FROM users WHERE user_id = %s",[request.POST['userID']])
+        
+    ## Use raw query to get all objects
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM orders ORDER BY order_id")
+        Orders = cursor.fetchall()
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM users ORDER BY user_id")
+        Users = cursor.fetchall()
+    result_dict = {'orders': Orders,'users': Users}
+
+    return render(request,'Home.html',result_dict)
