@@ -14,19 +14,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app import views
+from main import views
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('Admin', views.Admin, name='Admin'),
     path('', views.Home, name='Home'),
     path('Login', views.Login, name='Login'),
-    path('Register', views.Register, name='Register'),
+    path('Register',views.Register, name='Register'),
     path('placeOrder', views.placeOrder, name='placeOrder'),
-    path('claimedOrder', views.claimedOrder, name='claimedOrder'),
+    path('claimedOrder',views.claimedOrder, name='claimedOrder'),
     path('myOrder', views.myOrder, name='myOrder'),
     path('Profile', views.Profile, name='Profile'),
     path('View/<str:id>', views.View, name='View'),
-    path('editUser', views.editUser, name='editUser'),
-    path('editOrder', views.editUser, name='editUser'),
+    path('editUser/<str:id>', views.editUser, name='editUser'),
+    path('editOrder/<str:id>', views.editOrder, name='editOrder'),
     path('try', views.tryy, name='Homee')
 ]
