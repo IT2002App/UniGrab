@@ -80,11 +80,11 @@ def Home(request):
                 order=cursor.fetchone()
                 if order[1]!=userID:
                     cursor.execute("INSERT INTO claim VALUES (%s, %s, %s)", [order[0],order[1],userID])
-                    cursor.execute("UPDATE Orders SET status = 'Claimed' WHERE order_id = %s", [request.POST['id']])#!!!!!!!!!!!!!!!!!!!!!!!!!
+                    cursor.execute("UPDATE Orders SET status = 'claimed' WHERE order_id = %s", [request.POST['id']])#!!!!!!!!!!!!!!!!!!!!!!!!!
                     return redirect('Home')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Orders WHERE status = 'Waiting' ORDER BY user_id")
+        cursor.execute("SELECT * FROM Orders WHERE status = 'waiting' ORDER BY user_id")
         awaitingOrders = cursor.fetchall()
 
     result_dict = {'records': awaitingOrders}
@@ -103,12 +103,12 @@ def claimedOrder(request):
         if request.POST['action'] == 'cancel':
             with connection.cursor() as cursor:
                 cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderID']])
-                cursor.execute("UPDATE Orders SET status = 'Waiting' WHERE order_id = %s", [request.POST['orderID']])#!!!!!!!!!!!!!!!alter
+                cursor.execute("UPDATE Orders SET status = 'waiting' WHERE order_id = %s", [request.POST['orderID']])#!!!!!!!!!!!!!!!alter
                 return redirect('claimedOrder')
         if request.POST['action'] == 'delivered':
             with connection.cursor() as cursor:
                 cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderID']])
-                cursor.execute("UPDATE Orders SET status = 'Completed' WHERE order_id = %s", [request.POST['orderID']])#！！！！！！！！！！！！！！！！alter
+                cursor.execute("UPDATE Orders SET status = 'completed' WHERE order_id = %s", [request.POST['orderID']])#！！！！！！！！！！！！！！！！alter
                 return redirect('claimedOrder')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
@@ -193,7 +193,7 @@ def placeOrder(request):
         ## Check if customerid is already in the table
         with connection.cursor() as cursor:
                 cursor.execute("INSERT INTO Orders (user_id,phone_number,order_content,shop_address,user_address,fee,status) VALUES (%s,%s, %s, %s, %s, %s, %s)"
-                    , [userID, user[2], request.POST['orderContent'], request.POST['shopAddress'], user[4], request.POST['fee'],'Waiting'])
+                    , [userID, user[2], request.POST['orderContent'], request.POST['shopAddress'], user[4], request.POST['fee'],'waiting'])
         return redirect('myOrder')
     return render(request, "placeOrder.html", context)
 
