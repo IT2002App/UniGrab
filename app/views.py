@@ -268,12 +268,12 @@ def Admin(request):
         if 'action' in request.POST and request.POST['action'] == 'Delete':
             if status=='order':
                 with connection.cursor() as cursor:
-                    cursor.execute("DELETE FROM claim WHERE order_id = %s",[request.POST['orderID']])
-                    cursor.execute("DELETE FROM orders WHERE order_id = %s",[request.POST['orderID']])
+                    cursor.execute("DELETE FROM claim WHERE order_id = %s",[request.POST['orderId']])
+                    cursor.execute("DELETE FROM orders WHERE order_id = %s",[request.POST['orderId']])
                     return redirect('Admin')
             else:
                 with connection.cursor() as cursor:
-                    cursor.execute("DELETE FROM users WHERE user_id = %s",[request.POST['userID']])
+                    cursor.execute("DELETE FROM users WHERE user_id = %s",[request.POST['userId']])
         
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
