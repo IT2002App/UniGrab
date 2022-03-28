@@ -31,7 +31,7 @@
             <td>
                 <form method="POST" style="display: inline;">
                 {% csrf_token %}
-                <input type="hidden" name="id" value="{{cust.0}}"/>
+                <input type="hidden" name="orderId" value="{{cust.0}}"/>
                 <button type="submit" name="action" value="complete">Complete Order</button> 
                 <button type="submit" name="action" value="cancel">Cancel Order</button> 
               </form></td>
