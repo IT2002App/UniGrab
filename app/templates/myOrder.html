@@ -28,7 +28,7 @@
                 <a href="View/{{cust.0}}"><button>View Details</button></a>
                 <form method="POST" style="display: inline;">
                 {% csrf_token %}
-                <input type="hidden" name="id" value="{{cust.0}}"/>
+                <input type="hidden" name="orderId" value="{{cust.0}}"/>
                 <button type="submit" name="action" value="cancel">Cancel</button> 
               </form></td>
         </tr>
