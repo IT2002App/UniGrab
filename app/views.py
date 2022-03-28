@@ -254,18 +254,18 @@ def editOrder(request,id ):
     context['order'] = order
     return render(request, "editOrder.html", context)
 
-status=1
+status='order'
 def Admin(request):
     
     if request.POST:
         if 'act' in request.POST and request.POST['act'] == 'Home':
             return redirect('Home')
         if 'act' in request.POST and request.POST['act'] == 'orders':
-                status=1
+                status='order'
         if 'act' in request.POST and request.POST['act'] == 'users':
-            status=2
+            status='user'
         if 'action' in request.POST and request.POST['action'] == 'delete':
-            if status==1:
+            if status=='order':
                 with connection.cursor() as cursor:
                     cursor.execute("DELETE FROM claim WHERE order_id = %s",[request.POST['orderID']])
                     cursor.execute("DELETE FROM orders WHERE order_id = %s",[request.POST['orderID']])
