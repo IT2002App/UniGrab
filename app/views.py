@@ -102,13 +102,13 @@ def claimedOrder(request):
     if request.POST:
         if request.POST['action'] == 'cancel':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderID']])
-                cursor.execute("UPDATE Orders SET status = 'waiting' WHERE order_id = %s", [request.POST['orderID']])#!!!!!!!!!!!!!!!alter
+                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderId']])
+                cursor.execute("UPDATE Orders SET status = 'waiting' WHERE order_id = %s", [request.POST['orderId']])#!!!!!!!!!!!!!!!alter
                 return redirect('claimedOrder')
         if request.POST['action'] == 'delivered':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderID']])
-                cursor.execute("UPDATE Orders SET status = 'completed' WHERE order_id = %s", [request.POST['orderID']])#！！！！！！！！！！！！！！！！alter
+                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderId']])
+                cursor.execute("UPDATE Orders SET status = 'completed' WHERE order_id = %s", [request.POST['orderId']])#！！！！！！！！！！！！！！！！alter
                 return redirect('claimedOrder')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
@@ -130,8 +130,8 @@ def myOrder(request):
     if request.POST:
         if request.POST['action'] == 'cancel':
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderID']])
-                cursor.execute("DELETE FROM Orders WHERE order_id = %s", [request.POST['orderID']])
+                cursor.execute("DELETE FROM claim WHERE order_id = %s", [request.POST['orderId']])
+                cursor.execute("DELETE FROM Orders WHERE order_id = %s", [request.POST['orderId']])
                 return redirect('myOrder')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
