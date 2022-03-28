@@ -221,12 +221,12 @@ def editUser(request, id):
                 cursor.execute("SELECT * FROM Users WHERE email = %s", [request.POST['email']])
                 email = cursor.fetchone()
                 if email == None or result == user[2]:
-                    cursor.execute("UPDATE Users SET user_name = %s WHERE user_id = %s", [request.POST['userName'],userID])
-                    cursor.execute("UPDATE Users SET email = %s WHERE user_id = %s", [request.POST['email'],userID])
+                    cursor.execute("UPDATE Users SET user_name = cast (%s as VARCHAR) WHERE user_id = %s", [request.POST['userName'],userID])
+                    cursor.execute("UPDATE Users SET email = cast (%s as VARCHAR) WHERE user_id = %s", [request.POST['email'],userID])
                     cursor.execute("UPDATE Users SET phone_number = %s WHERE user_id = %s", [request.POST['phoneNumber'],userID])
                     cursor.execute("UPDATE Users SET birthday = %s WHERE user_id = %s", [request.POST['dob'],userID])
-                    cursor.execute("UPDATE Users SET address = %s WHERE user_id = %s", [request.POST['address'],userID])
-                    cursor.execute("UPDATE Users SET passwords = %s WHERE user_id = %s", [request.POST['password'],userID])
+                    cursor.execute("UPDATE Users SET address = cast (%s as VARCHAR) WHERE user_id = %s", [request.POST['address'],userID])
+                    cursor.execute("UPDATE Users SET passwords = cast (%s as VARCHAR) WHERE user_id = %s", [request.POST['password'],userID])
                     return redirect('Login')
                 else:
                     status = 'User with email %s already exists' % (request.POST['email'])
@@ -247,8 +247,8 @@ def editOrder(request,id ):
         order=cursor.fetchone()
     if request.POST:
         with connection.cursor() as cursor:
-            cursor.execute("UPDATE Orders SET order_content = %s WHERE order_id = %s", [request.POST['orderContent'],[id]])
-            cursor.execute("UPDATE Orders SET shop_address = %s WHERE order_id = %s", [request.POST['shopAddress'],[id]])
+            cursor.execute("UPDATE Orders SET order_content = cast (%s as VARCHAR) WHERE order_id = %s", [request.POST['orderContent'],[id]])
+            cursor.execute("UPDATE Orders SET shop_address = cast (%s as VARCHAR) WHERE order_id = %s", [request.POST['shopAddress'],[id]])
             cursor.execute("UPDATE Orders SET fee = %s WHERE order_id = %s", [request.POST['fee'],[id]])
         return redirect('myOrder')
     context['order'] = order
