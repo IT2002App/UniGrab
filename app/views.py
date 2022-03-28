@@ -258,13 +258,13 @@ def editOrder(request,id ):
 def Admin(request):
     status=0
     if request.POST:
-        if request.POST['act'] == 'Home':
+        if 'act' in request.POST and request.POST['act'] == 'Home':
             return redirect('Home')
-        if request.POST['act'] == 'orders':
+        if 'act' in request.POST and request.POST['act'] == 'orders':
                 status=0
-        if request.POST['act'] == 'users':
+        if 'act' in request.POST and request.POST['act'] == 'users':
             status=1
-        if request.POST['action'] == 'delete':
+        if 'action' in request.POST and request.POST['action'] == 'delete':
             if status==0:
                 with connection.cursor() as cursor:
                     cursor.execute("DELETE FROM claim WHERE order_id = %s",[request.POST['orderID']])
