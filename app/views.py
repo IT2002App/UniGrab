@@ -265,7 +265,7 @@ def Admin(request):
                 status='order'
         if 'act' in request.POST and request.POST['act'] == 'users':
             status='user'
-        if 'action' in request.POST and request.POST['action'] == 'delete':
+        if 'action' in request.POST and request.POST['action'] == 'Delete':
             if status=='order':
                 with connection.cursor() as cursor:
                     cursor.execute("DELETE FROM claim WHERE order_id = %s",[request.POST['orderID']])
