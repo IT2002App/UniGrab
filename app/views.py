@@ -249,7 +249,7 @@ def editOrder(request,id ):
         with connection.cursor() as cursor:
             cursor.execute("UPDATE Orders SET order_content = %s WHERE order_id = %s", [request.POST['orderContent'],id])
             cursor.execute("UPDATE Orders SET shop_address = %s WHERE order_id = %s", [request.POST['shopAddress'],id])
-            cursor.execute("UPDATE Orders SET fee = %s WHERE order_id = %s", [request.POST['fee'],[id]])
+            cursor.execute("UPDATE Orders SET fee = %s WHERE order_id = %s", [request.POST['fee'],id])
         return redirect('myOrder')
     context['order'] = order
     return render(request, "editOrder.html", context)
