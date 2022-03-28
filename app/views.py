@@ -254,9 +254,9 @@ def editOrder(request,id ):
     context['order'] = order
     return render(request, "editOrder.html", context)
 
-
+status=1
 def Admin(request):
-    status=1
+    
     if request.POST:
         if 'act' in request.POST and request.POST['act'] == 'Home':
             return redirect('Home')
