@@ -3,7 +3,7 @@
 {% load static %}
 <link rel="shortcut icon" href="icon.ico">
 <body>
-    <h2>Details for {{cust.0}}</h2>
+    <h2>Details for {{cust.1}}</h2>
     <a href="/">Back to home</a>
     <br/><br/>
     <table style='text-align:left'>
@@ -20,32 +20,32 @@
         <tr>
             <th>Email</th>
             <td>:</td>
-            <td> {{ cust.1 }} </td>
+            <td> {{ cust.2 }} </td>
         </tr>
 
         <tr>
             <th>Phone Number</th>
             <td>:</td>
-            <td> {{ cust.2 }} </td>
+            <td> {{ cust.3 }} </td>
         </tr>
 
         <tr>
             <th>Date of birth</th>
             <td>:</td>
-            <td> {{ cust.3 }} </td>
+            <td> {{ cust.4 }} </td>
         </tr>
 
         <tr>
             <th>Delivery Address</th>
             <td>:</td>
-            <td> {{ cust.4 }} </td>
+            <td> {{ cust.5 }} </td>
         </tr>
 
 
         <tr>
             <th>Password</th>
             <td>:</td>
-            <td> {{ cust.5 }} </td>
+            <td> {{ cust.6 }} </td>
         </tr>
     </table>
     <a href="editUser/{{cust.0}}"><button>Edit Profile</button></a> | 
