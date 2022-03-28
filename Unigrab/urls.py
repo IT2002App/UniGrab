@@ -28,6 +28,6 @@ urlpatterns = [
     path('Profile', views.Profile, name='Profile'),
     path('View/<str:id>', views.View, name='View'),
     path('editUser/<str:id>', views.editUser, name='editUser'),
-    path('editOrder/<str:id>', views.editOrder, name='editOrder'),
+    path('View/editOrder/<str:id>', views.editOrder, name='editOrder'),
     path('try', views.tryy, name='Homee')
 ]
