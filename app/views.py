@@ -254,9 +254,10 @@ def editOrder(request,id ):
     context['order'] = order
     return render(request, "editOrder.html", context)
 
+
 status='order'
 def Admin(request):
-    
+
     if request.POST:
         if 'act' in request.POST and request.POST['act'] == 'Home':
             return redirect('Home')
@@ -281,6 +282,6 @@ def Admin(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM users ORDER BY user_id")
         Users = cursor.fetchall()
-    result_dict = {'orders': Orders,'users': Users}
+    result_dict = {'orders': Orders,'users': Users,'status':status}
 
     return render(request,'Admin.html',result_dict)
