@@ -220,7 +220,7 @@ def editUser(request, id):
             if result == None or result == user[1]:
                 cursor.execute("SELECT * FROM Users WHERE email = %s", [request.POST['email']])
                 email = cursor.fetchone()
-                if email == None or result == user[2]:
+                if email == None or email == user[2]:
                     cursor.execute("UPDATE Users SET user_name = %s WHERE user_id = %s", [request.POST['userName'],userID])
                     cursor.execute("UPDATE Users SET email = %s WHERE user_id = %s", [request.POST['email'],userID])
                     cursor.execute("UPDATE Users SET phone_number = %s WHERE user_id = %s", [request.POST['phoneNumber'],userID])
