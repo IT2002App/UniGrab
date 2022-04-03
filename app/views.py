@@ -112,7 +112,7 @@ def claimedOrder(request):
                 return redirect('claimedOrder')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Orders as o,claim as c WHERE o.order_id = c.order_id AND c.deliveryman_id=%s ORDER BY o.order_id",[userID])
+        cursor.execute("SELECT o.*,u.user_name FROM Orders o, Users u, Claim c WHERE c.deliveryman_id = %s AND o.order_id=c.order_id, u.user_id=o.user_id ", [userID])
         claimedOrder = cursor.fetchall()
 
     result_dict = {'records': claimedOrder}
@@ -243,7 +243,7 @@ def editOrder(request,id ):
     if userID == None:
         return redirect('Login')
     with connection.cursor() as cursor:
-        cursor.execute("SELECT o.*,u.user_name FROM Orders o, Users u WHERE o.order_id = %s AND o.user_id=u.user_id", [id])
+        cursor.execute("SELECT * FROM Orders WHERE order_id = %s", [id])
         order=cursor.fetchone()
     if request.POST:
         with connection.cursor() as cursor:
