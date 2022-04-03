@@ -112,7 +112,7 @@ def claimedOrder(request):
                 return redirect('claimedOrder')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT o.*,u.user_name FROM Orders o, Users u, Claim c WHERE c.deliveryman_id = %s AND o.order_id=c.order_id, u.user_id=o.user_id ", [userID])
+        cursor.execute("SELECT o.*,u.user_name FROM Orders o, Users u, Claim c WHERE c.deliveryman_id = %s AND o.order_id=c.order_id AND u.user_id=o.user_id ", [userID])
         claimedOrder = cursor.fetchall()
 
     result_dict = {'records': claimedOrder}
