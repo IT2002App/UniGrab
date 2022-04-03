@@ -243,7 +243,7 @@ def editOrder(request,id ):
     if userID == None:
         return redirect('Login')
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Orders WHERE order_id = %s", [id])
+        cursor.execute("SELECT * FROM Orders,Users WHERE order_id = %s", [id])
         order=cursor.fetchone()
     if request.POST:
         with connection.cursor() as cursor:
