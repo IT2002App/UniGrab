@@ -192,7 +192,7 @@ def placeOrder(request):
     if request.POST:
         ## Check if customerid is already in the table
         with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO Orders (user_id,phone_number,order_content,shop_address,user_address,fee,status) VALUES (%s,%s, %s, %s, %s, %s, %s)"
+                cursor.execute("INSERT INTO Orders (user_id,phone_number,order_content,shop_address,user_address,fee,status) VALUES (%s,%s, %s, %s, %s, %f, %s)"
                     , [userID, user[2], request.POST['orderContent'], request.POST['shopAddress'], user[4], request.POST['fee'],'waiting'])
         return redirect('myOrder')
     return render(request, "placeOrder.html", context)
