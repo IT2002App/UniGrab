@@ -76,15 +76,15 @@ def Home(request):
                 return redirect('Login')
             
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM Orders WHERE order_id = %s", [request.POST['id']])
+                cursor.execute("SELECT user_id FROM Orders WHERE order_id = %s", [request.POST['id']])
                 order=cursor.fetchone()
-                if order[1]!=userID:
-                    cursor.execute("INSERT INTO claim VALUES (%s, %s, %s)", [order[0],order[1],userID])
+                if order!=userID:
+                    cursor.execute("INSERT INTO claim VALUES (%s, %s, %s)", [request.POST['id'],order,userID])
                     cursor.execute("UPDATE Orders SET status = 'claimed' WHERE order_id = %s", [request.POST['id']])#!!!!!!!!!!!!!!!!!!!!!!!!!
                     return redirect('Home')
     ## Use raw query to get all objects
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM Orders WHERE status = 'waiting' ORDER BY user_id")
+        cursor.execute("SELECT o.*, u.user_name FROM Orders o, Users u WHERE status = 'waiting' AND o.user_id=u.user_id ORDER BY u.user_id")
         awaitingOrders = cursor.fetchall()
 
     result_dict = {'records': awaitingOrders}
