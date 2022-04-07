@@ -221,12 +221,10 @@ def editUser(request, id):
                 cursor.execute("SELECT * FROM Users WHERE email = %s", [request.POST['email']])
                 email = cursor.fetchone()
                 if email == None or email == user[2]:
-                    cursor.execute("UPDATE Users SET user_name = %s WHERE user_id = %s", [request.POST['userName'],userID])
-                    cursor.execute("UPDATE Users SET email = %s WHERE user_id = %s", [request.POST['email'],userID])
-                    cursor.execute("UPDATE Users SET phone_number = %s WHERE user_id = %s", [request.POST['phoneNumber'],userID])
-                    cursor.execute("UPDATE Users SET birthday = %s WHERE user_id = %s", [request.POST['dob'],userID])
-                    cursor.execute("UPDATE Users SET address = %s WHERE user_id = %s", [request.POST['address'],userID])
-                    cursor.execute("UPDATE Users SET passwords = %s WHERE user_id = %s", [request.POST['password'],userID])
+                    cursor.execute("UPDATE Users SET user_name = %s,email = %s,phone_number = %s,
+				   birthday = %s,address = %s,passwords = %s WHERE user_id = %s", 
+				   [request.POST['userName'],equest.POST['email'],[request.POST['phoneNumber'],
+                                   request.POST['dob'],request.POST['address'],request.POST['password'],userID])
                     return redirect('Login')
                 else:
                     status = 'User with email %s already exists' % (request.POST['email'])
@@ -247,9 +245,9 @@ def editOrder(request,id ):
         order=cursor.fetchone()
     if request.POST:
         with connection.cursor() as cursor:
-            cursor.execute("UPDATE Orders SET order_content = %s WHERE order_id = %s", [request.POST['orderContent'],id])
-            cursor.execute("UPDATE Orders SET shop_address = %s WHERE order_id = %s", [request.POST['shopAddress'],id])
-            cursor.execute("UPDATE Orders SET fee = %s WHERE order_id = %s", [request.POST['fee'],id])
+            cursor.execute("UPDATE Orders SET order_content = %s,shop_address = %s,
+			   fee = %s WHERE order_id = %s", [request.POST['orderContent'],
+			   request.POST['shopAddress'],request.POST['fee'],id])
         return redirect('myOrder')
     context['order'] = order
     return render(request, "editOrder.html", context)
