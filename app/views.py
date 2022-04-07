@@ -214,11 +214,11 @@ def editUser(request, id):
     if request.POST:
         ## Check if customerid is already in the table
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM Users WHERE user_name = %s", [request.POST['userName']])
+            cursor.execute("SELECT user_name FROM Users WHERE user_name = %s", [request.POST['userName']])
             result = cursor.fetchone()
             ## No customer with same id
             if result == None or result == user[1]:
-                cursor.execute("SELECT * FROM Users WHERE email = %s", [request.POST['email']])
+                cursor.execute("SELECT email FROM Users WHERE email = %s", [request.POST['email']])
                 email = cursor.fetchone()
                 if email == None or email == user[2]:
                     cursor.execute("UPDATE Users SET user_name = %s,email = %s,phone_number = %s,birthday = %s,address = %s,passwords = %s WHERE user_id = %s", 
