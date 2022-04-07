@@ -222,7 +222,7 @@ def editUser(request, id):
                 email = cursor.fetchone()
                 if email == None or email == user[2]:
                     cursor.execute("UPDATE Users SET user_name = %s,email = %s,phone_number = %s,birthday = %s,address = %s,passwords = %s WHERE user_id = %s", 
-				   [request.POST['userName'],equest.POST['email'],[request.POST['phoneNumber'],
+				   [request.POST['userName'],equest.POST['email'],request.POST['phoneNumber'],
                                    request.POST['dob'],request.POST['address'],request.POST['password'],userID])
                     return redirect('Login')
                 else:
