@@ -79,7 +79,7 @@ def Home(request):
                 cursor.execute("SELECT user_id FROM Orders WHERE order_id = %s", [request.POST['id']])
                 order=cursor.fetchone()
                 if order!=userID:
-                    cursor.execute("INSERT INTO claim VALUES (%s, %s, %s)", [request.POST['id'],order,userID])
+                    cursor.execute("INSERT INTO claim(order_id, user_id, deliveryman_id) VALUES (%s, %s, %s)", [request.POST['id'],order,userID])
                     cursor.execute("UPDATE Orders SET status = 'claimed' WHERE order_id = %s", [request.POST['id']])#!!!!!!!!!!!!!!!!!!!!!!!!!
                     return redirect('Home')
     ## Use raw query to get all objects
